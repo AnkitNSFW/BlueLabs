@@ -12,6 +12,6 @@ asset_urls = {
     'widget3': 'https://i.imgur.com/lOPvKza.png',
 
     'notion_app': 'https://i.imgur.com/Zjt1FaA.png',
-    'notes_app': 'https://i.imgur.com/xczYuU5.png',
+    'notes_app': 'https://i.imgur.com/C6SO8Iy.png',
     'habit_scorecard_app': 'https://i.imgur.com/3DxtsSj.jpg'
 }
