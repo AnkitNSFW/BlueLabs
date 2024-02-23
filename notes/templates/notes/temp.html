@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        #logo {
+            filter: gray;
+            /* IE6-9 */
+            -webkit-filter: grayscale(1);
+            /* Google Chrome, Safari 6+ & Opera 15+ */
+            filter: grayscale(1);
+            /* Microsoft Edge and Firefox 35+ */
+        }
+
+        #logo:hover {
+            -webkit-filter: grayscale(0);
+            filter: none;
+        }
+
+        [contenteditable="true"]:focus {
+            outline: none;
+            border: none;
+        }
+
+        [contenteditable=true]:empty:before {
+            color: #a9a9a9;
+            content: attr(placeholder);
+            pointer-events: none;
+            display: block;
+            /* For Firefox */
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #202124;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #525355;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* The Modal (background) */
+        .modal {
+
+            /* Hidden by default */
+            /* Stay in place
+
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body style="background-color: #202124">
+    <nav style="background-color: #202124" class="fixed flex w-full min-w-[500px]  px-3 py-2  border-b border-gray-500">
+        <div class="flex">
+            <img id="logo" src="https://i.imgur.com/BmdXerT.png" alt="" class="h-10" />
+            <h1 class="my-auto ml-2 text-3xl text-white">Notes</h1>
+        </div>
+
+        <div class="m-auto mr-0">
+            <ul class="flex flex-row">
+                <li>
+                    <p id="saved_status" class="mx-5 text-lg text-white">
+                        Saved
+                    </p>
+                </li>
+                <li>
+                    <a href="#" class="mx-5 text-xl font-semibold text-white hover:text-red-600">
+                        <i class="fa-solid fa-plus"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div style="background-color: #202124" class="px-10  min-h-screen">
+        <!-- Empty Space for navbar -->
+        <div class=" h-16 p-12"></div>
+
+
+        <div id="myModal"
+            class="left-0 top-0 bg-opacity-50 hidden fixed h-screen w-full items-center justify-center z-0 bg-black">
+
+            <div style="background-color: #202124; max-height: 80%;"
+                class="h-min w-1/2 overflow-auto rounded-lg border border-white">
+
+                <div class="m-4 text-white">
+                    <h1 id="model-h1" contenteditable="true" class="mb-4 text-2xl" placeholder="Title"></h1>
+                    <p id="model-p" contenteditable="true" class="text-s" placeholder="Take a note..."></p>
+                </div>
+                <div class=" flex justify-between">
+                    <p class="mb-2 ml-2 text-slate-600 opacity-70">Modified at: 12/34/5678 12:34</p>
+                    <div class="mb-2 mr-2 flex justify-end">
+                        <i class="fa-solid fa-download mx-2 my-1 text-xl text-white hover:text-blue-400"></i>
+                        <i class="fa-solid fa-thumbtack mx-2 my-1 text-xl text-white hover:text-green-400"></i>
+                        <i class="close fa-solid fa-xmark mx-2 my-1 text-xl text-white hover:text-green-400"></i>
+                        <i class="fa-solid fa-trash mx-2 my-1 text-xl text-white hover:text-red-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+
+
+
+        <p class="text-gray-500">PINNED</p>
+        <div class="flex flex-wrap">
+            <div class="target-note m-2 w-64 h-min rounded-lg  p-3 text-gray-300 border border-gray-500 select-none">
+                <h1 class="font-bold p-2 border-0">hhhhhhhh<br><br><br>f</h1>
+                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget neque odio.
+                    Cras eget tempus orci, sagittis semper tortor. Vestibulum ante ipsum primis in faucibus orci
+                    luctus
+                    et ultrices posuere cubilia curae; Vestibulum ante ipsum primis in faucibus orci luctus et
+                    ultrices
+                    posuere cubilia curae; Ut nibh risus, faucibus eget felis ac, consequat rhoncus velit. Maecenas
+                    imperdiet leo quis felis porta, id bibendum ante tincidunt. Vestibulum dignissim dui ac velit
+                    lacinia tincidunt. Nulla blandit leo nec enim viverra condimentum.</p>
+            </div>
+
+            <div class="target-note m-2 w-64 h-min rounded-lg  p-3 text-gray-300 border border-gray-500 select-none">
+                <h1 class="font-bold mb-1">Something</h1>
+                <p class="text-sm">Lorem ipsum dolor posuere cubilia curae; Vestibulum ante ipsum primis in faucibus
+                    orci luctus et ultrices posuere cubilia curae; Ut nibh risus, faucibus eget felis ac, consequat
+                    rhoncus velit. Maecenas imperdiet leo quis felis porta, id bibendum ante tincidunt. Vestibulum
+                    dignissim dui ac velit lacinia tincidunt. Nulla blandit leo nec enim viverra condimentum.</p>
+            </div>
+        </div>
+
+        <p class="text-gray-500 mt-10">OTHERS</p>
+        <div class="flex flex-wrap ">
+            <div class="target-note m-2 w-64 h-min rounded-lg  p-3 text-gray-300 border border-gray-500 select-none">
+                <h1 class="font-bold mb-1">Something</h1>
+                <p class="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget neque odio.
+                    Cras eget tempus orci, sagittis semper tortor. Vestibulum ante ipsum primis in faucibus orci
+                    luctus
+                    et ultrices </p>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        function modifyString(originalString) {
+            originalString = originalString+''
+            var modify_string = originalString.replace(/<div>(<br>\s*)+<\/div>/g, '<br>');
+            modify_string = modify_string.replace("<div><br></div>", "<br>");
+            modify_string = modify_string.replace(/<div>\s*/g, "<br>");
+            modify_string = modify_string.replace(/<\/div>\s*/g, "");
+            modify_string = modify_string.replace(/&nbsp;\s*/g, " ");
+            modify_string = modify_string.replace(/^(<br>\s*)+/g, '');
+            modify_string = modify_string.replace(/(<br>\s*)+$/g, '');
+            return modify_string
+
+        }
+
+        function send_update(changes) {
+            $.ajax({
+                url: 'update',
+                method: "POST",
+                data: { 'headers': null, 'title': changes , 'note_id': '1db9745e-9dc1-4143-976c-68304053cec7', 'update_request_no': 999},
+                dataType: "json",
+
+                success: function (response) {
+                    console.log(response);
+                    if (response.status == true) { console.log({ 'updated': changes }) }
+                    else { alert(response.msg); }
+                },
+                error: function (xhr, status, error) { alert("Error While Autosaving."); }
+            });        }
+
+        var Model_title = document.getElementById('model-h1');
+        var initialText = modifyString($('#model-h1').html());
+        var saveTimer;
+        Model_title.addEventListener('input', function () {
+            $('#saved_status').text('Saving...');
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(function () {
+                send_update(modifyString($('#model-h1').html()))
+            }, 500);
+            $('#saved_status').text('Saved');
+        });
+
+
+        var modal = document.getElementById("myModal");
+        var btn = document.querySelectorAll(".note_card");
+        var span = document.getElementsByClassName("close")[0];
+
+
+        span.onclick = function () {modal.style.display = "none";}
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        $(document).ready(function () {
+            // Single event listener for all divs with the class 'target-div'
+            $('.target-note').on('click', function () {
+                $('#model-h1').html($(this).find('h1').html());
+                $('#model-p').html($(this).find('p').html());
+                modal.style.display = "flex";
+
+            });
+        });
+
+    </script>
+
+
+    <!-- uesd for Vercel Web Analytics -->
+    <!-- <script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script> -->
+</body>
+
+</html>

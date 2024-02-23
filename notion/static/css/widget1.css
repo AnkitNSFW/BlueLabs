@@ -1,0 +1,64 @@
+body {
+    background-color:  var(--background-color);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+
+    position: relative;
+}
+
+.centered-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#img {
+    height: 32vh;
+    width: 32vh;
+    margin-right: 5vh;
+}
+
+#price {
+    font-size: 32vh;
+}
+
+.config {
+    background-color: var(--background-color);
+    color: var(--background-color);
+    height: 22.5vh;
+    width: 67.5vh;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Add a transition effect for smooth color change */
+
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    border-radius: 7vh 0 0 0;
+}
+
+.config p {
+    margin-top: 4.5vh;
+    font-size: 13.5vh;
+}
+
+.config:hover {
+    /* Define the styles for when hovering */
+    background-color: white; /* Change the background color to red on hover */
+}
+
+
+.unselectable {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}

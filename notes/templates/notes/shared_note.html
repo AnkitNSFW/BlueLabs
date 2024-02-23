@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes</title>
+    <link rel="icon" href="{{asset_urls.logo_png}}" type="image/png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        #logo {
+            filter: gray;
+            /* IE6-9 */
+            -webkit-filter: grayscale(1);
+            /* Google Chrome, Safari 6+ & Opera 15+ */
+            filter: grayscale(1);
+            /* Microsoft Edge and Firefox 35+ */
+        }
+
+        #logo:hover {
+            -webkit-filter: grayscale(0);
+            filter: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #202124;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #525355;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body style="background-color: #202124">
+    <nav style="background-color: #202124" class="fixed flex w-full min-w-[500px] border-b border-gray-500 px-3 py-2">
+        <div class="flex">
+            <a href="/home"><img id="logo" src="https://i.imgur.com/BmdXerT.png" alt="" class="h-10" /></a>
+            <h1 class="my-auto ml-2 text-3xl text-white">Notes</h1>
+        </div>
+
+        <div class="m-auto mr-0">
+            <ul class="flex flex-row">
+                <li>
+                    <p class="mx-5 text-l text-gray-500" >(This note has been shared)</p>
+                </li>
+                <li>
+                    <a  id="nav-create-note" href="/notes" target="_blank"
+                        class="text-l rounded-md p-1.5 font-semibold bg-blue-950 text-white hover:bg-green-600">Create Note</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div style="background-color: #202124; margin-left: 10%; margin-right: 10%;" class="min-h-screen p-10">
+        <!-- Empty Space for navbar -->
+        <div class="p-10"></div>
+
+        {% if note_exist and note_shared %}
+                {% if title %}
+                    <h1 class="text-3xl font-bold text-white">{{title|safe}}</h1>
+                {% else %}
+                    <h1 class="text-3xl text-gray-500">(Title section is empty by the creator)</h1>
+                {% endif %}
+                <br />
+                {% if note %}
+                    <p class="text-sm text-white">{{note|safe}}</p>
+                {% else %}
+                    <p class="text-sm text-gray-500">(Note section is empty by the creator)</p>
+                {% endif %}
+        {% else %}
+            <h1 class="text-xl  text-center text-white">{{msg}}</h1>
+        {% endif %}
+    </div>
+</body>
+
+</html>

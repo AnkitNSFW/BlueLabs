@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes</title>
+    <link rel="icon" href="{{asset_urls.logo_png}}" type="image/png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        #logo {
+            filter: gray;
+            /* IE6-9 */
+            -webkit-filter: grayscale(1);
+            /* Google Chrome, Safari 6+ & Opera 15+ */
+            filter: grayscale(1);
+            /* Microsoft Edge and Firefox 35+ */
+        }
+
+        #logo:hover {
+            -webkit-filter: grayscale(0);
+            filter: none;
+        }
+
+        [contenteditable="true"]:focus {
+            outline: none;
+            border: none;
+        }
+
+        [contenteditable=true]:empty:before {
+            color: #a9a9a9;
+            content: attr(placeholder);
+            pointer-events: none;
+            display: block;
+            /* For Firefox */
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #202124;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #525355;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .limit-text-overflow {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .limit-2 {
+            -webkit-line-clamp: 2;
+        }
+
+        .limit-15 {
+            -webkit-line-clamp: 15;
+        }
+    </style>
+
+    
+</head>
+
+<body style="background-color: #202124">
+    <nav style="background-color: #202124" class="fixed flex w-full min-w-[500px]  px-3 py-2  border-b border-gray-500">
+        <div class="flex">
+            <a href="/home"><img id="logo" src="{{asset_urls.logo_png}}" alt="" class="h-10" /></a>
+            <h1 class="my-auto ml-2 text-3xl text-white">Notes</h1>
+        </div>
+
+        <div class="m-auto mr-0">
+            <ul class="flex flex-row">
+                <li>
+                    <!-- <p id="saved_status" class="mx-5 text-lg text-white">
+                        Saved
+                    </p> -->
+                </li>
+                <li>
+                    <a id="nav-create-note" class="mx-5 text-xl font-semibold text-white hover:text-red-600">
+                        <i class="fa-solid fa-plus"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div style="background-color: #202124" class="px-10  min-h-screen">
+        <!-- Empty Space for navbar -->
+        <div class=" h-16 p-12"></div>
+
+
+        <div id="myModal"
+            class="left-0 top-0 bg-opacity-50 hidden fixed h-screen w-full items-center justify-center z-0 bg-black">
+
+            <div id="model" style="background-color: #202124; max-height: 80%;"
+                class="h-min w-1/2 overflow-auto rounded-lg border border-white">
+
+                <div id="model-box" class="m-4 text-white">
+                    <h1 id="model-h1" contenteditable="true" class="mb-4 text-2xl" placeholder="Title"></h1>
+                    <p id="model-p" contenteditable="true" class="text-s" placeholder="Take a note..."></p>
+                </div>
+                <div class="flex justify-between">
+                    <p id="model-modified_at" class="ml-2 text-slate-600 opacity-70"></p>
+                    <div class="mr-2 flex justify-end">
+                        <p id="model-autosave_status" class="mr-6 text-xl text-white opacity-70">Saved</p>
+                        <i id="model-delete"
+                            class="fa-solid fa-trash mx-2 my-1 text-xl text-white hover:text-red-600"></i>
+                        <i id="model-download"
+                            class="fa-solid fa-download mx-2 my-1 text-xl text-white hover:text-blue-400"></i>
+                        <i id="model-pin"
+                            class="fa-solid fa-thumbtack mx-2 my-1 text-xl text-white hover:text-green-400"></i>
+                        <i id="model-share" class="fa-solid fa-share mx-2 my-1 text-xl text-white hover:text-blue-400"></i>
+                        <i class="close mx-2 my-1 text-xl text-white hover:text-red-400">Close</i>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <p id="pinned_title" class="text-gray-500 select-none hidden">PINNED</p>
+        <div id="pinned_div" class="flex flex-wrap mb-10 hidden">
+            {% if notes.pinned %}
+            {% for pinned_note in notes.pinned %}
+            <div note_id="{{pinned_note.note_id}}" modified_at="{{pinned_note.modified_at}}" update_request_no = "{{pinned_note.update_request_no}}"
+                class="target-note m-2 w-64 h-min rounded-lg  p-3 text-gray-300 border border-gray-500 select-none">
+                <h1 class="font-bold py-2 border-0 limit-text-overflow limit-2">{% if pinned_note.title %}{{pinned_note.title|safe}}{% endif %}</h1>
+                <p class="text-sm limit-text-overflow limit-15">{% if pinned_note.note %}{{pinned_note.note|safe}}{% endif %}</p>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+        <p id="unpinned_title" class="text-gray-500 select-none hidden">OTHERS</p>
+        <div id="unpinned_div" class="flex flex-wrap hidden">
+            {% if notes.unpinned %}
+            {% for unpinned_note in notes.unpinned %}
+            <div note_id="{{unpinned_note.note_id}}" modified_at="{{unpinned_note.modified_at}}" update_request_no = "{{unpinned_note.update_request_no}}"
+                class="target-note m-2 w-64 h-min rounded-lg  p-3 text-gray-300 border border-gray-500 select-none">
+                <h1 class="font-bold py-2 border-0 limit-text-overflow limit-2">{% if unpinned_note.title %}{{unpinned_note.title|safe}}{% endif %}
+                </h1>
+                <p class="text-sm limit-text-overflow limit-15">{% if unpinned_note.note %}{{unpinned_note.note|safe}}{% endif %}</p>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+
+    </div>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var modal = document.getElementById("myModal");
+            var btn = document.querySelectorAll(".note_card");
+            var span = document.getElementsByClassName("close")[0];
+
+            var Model_box = document.getElementById('model-box');
+            var Model_title = document.getElementById('model-h1');
+            var Model_note = document.getElementById('model-p');
+            var initialText = modifyString($('#model-h1').html());
+            var saveTimer;
+
+            span.onclick = function () { modal.style.display = "none"; }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            function copyToClipboard(text) {
+                var tempInput = $("<input>");
+                $("body").append(tempInput);
+                tempInput.val(text).select();
+                document.execCommand("copy");
+                tempInput.remove();
+            }
+
+            $('#model-share').on('click', function () {  
+                $.ajax({
+                    url: 'sharable',
+                    method: "POST",
+                    data: { 'headers': null, 'note_id':  $('#model').attr('model_note_id')},
+                    dataType: "json",
+
+                    success: function (response) {
+                        if (response.status == true) {
+                            copyToClipboard("https://bluelabs.vercel.app/notes/s/"+$('#model').attr('model_note_id'))
+                            $('#model-autosave_status').text('Link Copied!!');
+                            setTimeout(() => $('#model-autosave_status').text('Saved'), 2000)
+                            ;
+                        }
+                        else { 
+                            $('#model-autosave_status').text(response.msg); 
+                        }
+                    },
+                    error: function (xhr, status, error) { alert("Error While creating sharable link.."); }
+                });
+
+                function copyToClipboard(text) {
+                    var tempInput = $("<input>");
+                    $("body").append(tempInput);
+                    tempInput.val(text).select();
+                    document.execCommand("copy");
+                    tempInput.remove();
+                }
+            })
+
+            $('.target-note').on('click', function () {
+                $('#model-h1').html($(this).find('h1').html());
+                $('#model-p').html($(this).find('p').html());
+                $('#model').attr('model_note_id', $(this).attr('note_id'))
+                $('#model-modified_at').text('Modified at: ' + $(this).attr('modified_at'))
+                modal.style.display = "flex";
+            });
+            function add_notes_eventlistener(note_id) {
+                $('div[note_id=' + note_id + ']').on('click', function () {
+                    $('#model-h1').html($(this).find('h1').html());
+                    $('#model-p').html($(this).find('p').html());
+                    $('#model').attr('model_note_id', $(this).attr('note_id'))
+                    $('#model-modified_at').text('Modified at: ' + $(this).attr('modified_at'))
+                    modal.style.display = "flex";
+                });
+            }
+
+            function modifyString(originalString) {
+                originalString = originalString + ''
+                var modify_string = originalString.replace(/<div>(<br>\s*)+<\/div>/g, '<br>');
+                modify_string = modify_string.replace("<div><br></div>", "<br>");
+                modify_string = modify_string.replace(/<div>\s*/g, "<br>");
+                modify_string = modify_string.replace(/<\/div>\s*/g, "");
+                modify_string = modify_string.replace(/&nbsp;\s*/g, " ");
+                modify_string = modify_string.replace(/^(<br>\s*)+/g, '');
+                modify_string = modify_string.replace(/(<br>\s*)+$/g, '');
+                return modify_string
+            }
+
+            function ShowOrHide_PinnedOrUnpinned_Label(){
+                $.each(['pinned', 'unpinned'], function(index, value) {
+                    if ($("#"+value+'_div').children().length != 0){
+                        $("#"+value+'_div').show();
+                        $("#"+value+'_title').show();
+                        $("#"+value+'_div').css('display', 'flex');
+                        $("#"+value+'_title').css('display', 'flex');
+                    }else{
+                        $("#"+value+'_div').hide();
+                        $("#"+value+'_title').hide();
+                    }
+                });
+                
+            }
+
+            function send_update(title, note, note_id) {
+                $.ajax({
+                    url: 'update',
+                    method: "POST",
+                    data: {'headers': null, 'title': title, 'note': note, 'note_id': note_id, 'update_request_no': $('div[note_id=' + note_id + ']').attr('update_request_no')},
+                    dataType: "json",
+
+                    success: function (response) {
+                        if (response.status == true) {
+                            $('#model-modified_at').text('Modified at: ' + response.modified_at)
+                            $('#model-autosave_status').text('Saved');
+                            $('div[note_id=' + note_id + ']').attr({'update_request_no': response.update_request_no, 'modified_at': response.modified_at})
+                            $('div[note_id=' + note_id + ']').find('h1').html(title)
+                            $('div[note_id=' + note_id + ']').find('p').html(note)
+                        }
+                        else { 
+                            console.log({ 'headers': null, 'title': title, 'note': note, 'note_id': note_id, 'update_request_no': $('div[note_id=' + note_id + ']').attr('update_request_no') })
+                            alert(response.msg); 
+                        }
+                    },
+                    error: function (xhr, status, error) { alert("Error While Autosaving."); }
+                });
+            }
+
+            $('#model-pin').on('click', function () {
+                $('#model-autosave_status').text('Saving...');
+                $.ajax({
+                    url: 'toggle_pin/' + $('#model').attr('model_note_id'),
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.status) {
+                            if (data.current_pin_status) {
+                                var new_parent_div = "#pinned_div"
+                            } else {
+                                var new_parent_div = "#unpinned_div"
+                            }
+                            $('div[note_id=' + $('#model').attr('model_note_id') + ']').prependTo(new_parent_div)
+                            delete new_parent_div;
+                            ShowOrHide_PinnedOrUnpinned_Label();
+                            $('#model-autosave_status').text('Saved');
+                        }
+                        else {
+                            alert(data.msg)
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error while changing PIN status.')
+                    }
+                });
+            });
+
+            $('#model-delete').on('click', function () {
+                $('#model-autosave_status').text('Saving...');
+                $.ajax({
+                    url: 'delete/' + $('#model').attr('model_note_id'),
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.status) {
+                            $('div[note_id=' + $('#model').attr('model_note_id') + ']').remove()
+                            ShowOrHide_PinnedOrUnpinned_Label();
+                            $('#model-autosave_status').text('Saved');
+                            modal.style.display = "none";
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error while deleting the note')
+                    }
+                });
+            });
+
+            $('#nav-create-note').on('click', function () {
+                $.ajax({
+                    url: 'create',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.status) {
+                            console.log(data)
+                            $('#model-h1').html('');
+                            $('#model-p').html('');
+                            $('#model').attr('model_note_id', data.note_id)
+                            $('#model-modified_at').text('Created at: ' + data.created_at)
+                            modal.style.display = "flex";
+                            $("#unpinned_div").prepend(`
+                                <div note_id="`+ data.note_id + `" modified_at="` + data.created_at + `"`+`update_request_no="0"`+`
+                                    class="target-note m-2 w-64 h-min rounded-lg  p-3 text-gray-300 border border-gray-500 select-none">
+                                    <h1 class="font-bold py-2 border-0">Title</h1>
+                                    <p class="text-sm">Take a note...</p>
+                                </div>`
+                            );
+                            ShowOrHide_PinnedOrUnpinned_Label();
+                            add_notes_eventlistener(data.note_id)
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error while deleting the note')
+                    }
+                });
+            });
+
+            $('#model-download').on('click', function (e) {
+                // Prevent the default behavior of the link
+                e.preventDefault();
+                // Get the link's href attribute
+                var fileUrl = 'download/' + $('#model').attr('model_note_id');
+                // Trigger the download using window.location
+                window.location.href = fileUrl;
+            });
+
+
+            Model_box.addEventListener('input', function () {
+                $('#model-autosave_status').text('Saving...');
+                clearTimeout(saveTimer);
+                saveTimer = setTimeout(function () {
+                    initialText_h1 = modifyString($('#model-h1').html())
+                    initialText_p = modifyString($('#model-p').html())
+                    send_update(title = initialText_h1, note = initialText_p, note_id = $('#model').attr('model_note_id'))
+                }, 500);
+
+            });
+
+            // Model_note.addEventListener('input', function () {
+            //     $('#model-autosave_status').text('Saving...');
+            //     clearTimeout(saveTimer);
+            //     saveTimer = setTimeout(function () {
+            //         initialText = modifyString($('#model-p').html())
+            //         send_update(change_type = 'note', changes = initialText, note_id = $('#model').attr('model_note_id'))
+            //     }, 500);
+            // });
+
+            ShowOrHide_PinnedOrUnpinned_Label('pinned');
+            ShowOrHide_PinnedOrUnpinned_Label('unpinned');
+        });
+    </script>
+
+
+    <!-- uesd for Vercel Web Analytics -->
+    <!-- <script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script> -->
+</body>
+
+</html>

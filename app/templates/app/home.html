@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{first_name}} - BlueLabs</title>
+    <link rel="icon" href="{{asset_urls.logo_png}}" type="image/png">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black" >
+
+    <nav class="fixed flex w-full min-w-[500px] bg-gray-900 px-3 py-2">
+        <div class="flex">
+          <img src="{{asset_urls.logo_png}}" alt="" class="h-14" />
+          <h1 class="my-auto text-3xl ml-2 text-white">BlueLabs</h1>
+        </div>
+      
+        <div class="m-auto mr-0">
+          <ul class="flex flex-row">
+            <li>
+              <a href="#" class="mx-5 text-xl font-semibold text-white hover:text-blue-400">About</a>
+            </li>
+            <li>
+              <a href="/logout" class="mx-5 text-xl font-semibold text-white hover:text-red-600">Logout</a>
+            </li>
+          </ul>
+        </div>
+    </nav>
+
+    
+    
+    <div class="mx-16 flex flex-col min-h-screen">
+
+      <!-- Empty Space for navbar -->
+      <div class="h-16 p-12"></div>
+
+
+
+        <h1 class="mx-8 my-3 text-2xl text-white">Apps</h1>
+
+        <div class="flex justify-center">
+        <div class="h-1 w-full bg-white"></div>
+        </div>
+
+        <div class="flex mt-4 flex-wrap justify-center mb-12">
+
+          <a href="/notion" class="duration-400 m-8 mb-2 text-xl font-semibold text-white transition hover:font-bold hover:text-blue-300" height="h-28">
+            <div class=" max-w-sm overflow-hidden rounded-2xl border-2 shadow-lg hover:border-4 hover:border-blue-400">
+              <img class="w-full" src="{{asset_urls.notion_app}}" />
+              <div class="px-6 py-4">
+                <p>Notion Widgets <i class="fa-solid fa-chevron-right"></i></p>
+              </div>
+            </div>
+          </a>
+
+          <a href="/notes" class="duration-400 m-8 mb-2 text-xl font-semibold text-white transition hover:font-bold hover:text-blue-300" height="h-28">
+            <div class=" max-w-sm overflow-hidden rounded-2xl border-2 shadow-lg hover:border-4 hover:border-blue-400">
+              <img class="w-full" src="{{asset_urls.notes_app}}" />
+              <div class="px-6 py-4">
+                <p>Notes<i class="fa-solid fa-chevron-right"></i></p>
+              </div>
+            </div>
+          </a>
+
+          <!-- <a href="#" class="duration-400 m-8 mb-2 text-xl font-semibold text-white transition hover:font-bold hover:text-blue-300" height="h-28">
+            <div class=" max-w-sm overflow-hidden rounded-2xl border-2 shadow-lg hover:border-4 hover:border-blue-400">
+              <img class="w-full" src="{{asset_urls.habit_scorecard_app}}" />
+              <div class="px-6 py-4">
+                <p>Digital Score-card (coming soon) <i class="fa-solid fa-chevron-right"></i></p>
+              </div>
+            </div>
+          </a> -->
+        </div>
+
+
+        <footer class="m-4 rounded-lg bg-white shadow dark:bg-gray-800 w-full  mt-auto">
+          <div class="mx-auto w-full max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+            <span class="text-base text-gray-500 dark:text-gray-400 sm:text-center">© 2023 BlueLabs™. All Rights Reserved. </span>
+            <ul class="mt-3 flex flex-wrap items-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
+              <li>
+                <a href="https://x.com/Ankit_NSFW" target="_blank" class="me-4 md:me-6 text-lg hover:text-blue-500">X</a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/in/ankit69/" target="_blank" class="me-4 text-lg md:me-6 hover:text-blue-500">LinkedIn</a>
+              </li>
+              <li>
+                <a href="https://github.com/AnkitNSFW" target="_blank" class="me-4 text-lg hover:text-blue-500 md:me-6">Github</a>
+              </li>
+            </ul>
+          </div>
+        </footer>
+
+    </div>
+
+    
+
+    <!-- uesd for Vercel Web Analytics -->
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

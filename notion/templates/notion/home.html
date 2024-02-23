@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notion Widgets</title>
+    <link rel="icon" href="{{asset_urls.logo_png}}" type="image/png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-black min-h-full">
+      <nav class="fixed flex w-full min-w-[500px] bg-gray-900 px-4 py-2">
+        <div class="flex">
+          <img src="{{asset_urls.notion_logo}}" alt="" class="h-12" />
+          <h1 class="my-auto ml-2 text-3xl text-white">Widgets</h1>
+        </div>
+
+        <div class="m-auto mr-0">
+          <ul class="flex flex-row">
+            <li>
+              <a href="/home" class="mx-5 text-xl font-semibold text-white hover:text-blue-400">Home</a>
+            </li>
+            <li>
+              <a href="/logout" class="mx-5 text-xl font-semibold text-white hover:text-red-600">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Empty Space for navbar -->
+      <div class="h-16 p-12"></div>
+
+      <div class="mx-4">
+        <div class="rounded-lg bg-gray-900 p-6">
+          <h1 class="mx-4 text-white">Create Widgets</h1>
+          <div class="my-2 h-1 w-full bg-white"></div>
+          <div class="mt-4 flex flex-wrap justify-center">
+
+            <a class="m-4" onclick="fetchAndAlert('widget1')">
+              <div style="width: 40vh" class="group relative">
+                <img class="rounded-lg transition-all duration-200 group-hover:blur-sm" src="{{asset_urls.widget1}}" alt="image description" />
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <i  class="fa-solid fa-plus text-white opacity-80 text-8xl"></i>
+                </div>
+              </div>
+            </a>
+
+            <a class="m-4" onclick="fetchAndAlert('widget2')">
+              <div style="width: 40vh" class="group relative">
+                <img class="rounded-lg transition-all duration-200 group-hover:blur-sm" src="{{asset_urls.widget2}}" alt="image description" />
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <i  class="fa-solid fa-plus text-white opacity-80 text-8xl"></i>
+                </div>
+              </div>
+            </a>
+
+            <a class="m-4" onclick="fetchAndAlert('widget3')">
+              <div style="width: 40vh" class="group relative">
+                <img class="rounded-lg transition-all duration-200 group-hover:blur-sm" src="{{asset_urls.widget3}}" alt="image description" />
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <i  class="fa-solid fa-plus text-white opacity-80 text-8xl"></i>
+                </div>
+              </div>
+            </a>
+
+          </div>
+        </div>
+
+        <div class="my-6 rounded-lg bg-gray-900 p-6">
+          <h1 class="mx-4 text-white">Your Widgets</h1>
+          <div class="my-2 h-1 w-full bg-white"></div>
+          <div class="mt-4 flex flex-wrap justify-center">
+            {% if widgets %}
+                {% for widget in widgets %}
+                <div class="bg-black rounded-xl border-2 h-min mb-0 pb-0 m-4">
+                    <div>
+                        <iframe style="pointer-events: none" class="rounded-xl" loading="lazy" src="/notion/widget/{{ widget.widget_id }}" frameborder="0" height="80%" width="100%" ></iframe>
+                    </div>
+                    <div>
+                        <h2 class="text-white text-lg ml-3">{{widget.name}}</h2>
+                    </div>
+                
+                    <div class="inline-flex rounded-md shadow-sm w-full text-center" role="group">
+                        <a href="/notion/config/{{ widget.widget_id }}" type="button" class="rounded-bl-lg w-1/4 px-4 py-2 text-sm font-medium text-white h-auto hover:bg-blue-600 border-t">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <a  href="/notion/widget/{{ widget.widget_id }}" target="_blank"  type="button" class="w-1/4 px-4 py-2 text-sm font-medium text-white h-auto hover:bg-blue-600 border-x border-t">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <button data-modal-target="popup-modal" data-modal-toggle="popup-modal" type="button" class="w-1/4 px-4 py-2 text-sm font-medium text-white h-auto hover:bg-blue-600 border-t border-x" onClick="copyToClipboard('http://bluelabs.vercel.app/notion/widget/{{widget.widget_id}}')">
+                            <i class="fa-solid fa-link"></i>
+                        </button>
+                        <a  href="/notion/delete/{{ widget.widget_id }}" target="_top"  type="button" class=" rounded-br-lg w-1/4 px-4 py-2 text-sm font-medium text-white h-auto hover:bg-red-600 border-x border-t">
+                          <i class="fa-solid fa-trash"></i>
+                      </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <h4 class="text-white" >You haven't created a widget yet.</h4>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+    <!-- models -->
+    <div id="popup-modal" tabindex="-1" class="hidden fixed left-0 right-0 top-0 z-50 h-[calc(100%-1rem)] max-h-full w-full items-center justify-center">
+      <div class="relative max-h-full w-full max-w-xs p-4">
+        <div class="relative rounded-lg bg-gray-700">
+          <div class="p-4 text-center md:p-5">
+            <h3 class="mb-5 text-lg font-normal text-white">Widget Link Copied !!!</h3>
+            <button data-modal-hide="popup-modal" type="button" class="me-2 inline-flex items-center rounded-lg bg-green-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-800">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <!-- uesd for Vercel Web Analytics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+      function fetchAndAlert(widget_name) {
+      // Make an AJAX request to your API
+      $.ajax({
+        url: '/notion/add',
+        method: "POST",
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}', 'widget_name': widget_name},
+        dataType: "json",
+        success: function(response) {
+          if ( response.status == true) {location.reload();} 
+          else {alert("Limit Exceded, cannot make more widgets of this kind.");}
+        },
+        error: function(xhr, status, error) {alert("Error while creating widgets.");}
+      });
+    }
+
+      function copyToClipboard(text) {
+          var tempInput = $("<input>");
+          $("body").append(tempInput);
+          tempInput.val(text).select();
+          document.execCommand("copy");
+          tempInput.remove();
+      }
+    </script>
+
+    <script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+  </body>
+</html>

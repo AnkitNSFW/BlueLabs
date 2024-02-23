@@ -1,0 +1,22 @@
+{
+  "builds": [
+    {
+      "src": "vercel_app/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "vercel_app/wsgi.py"
+    }
+  ],
+
+  "crons": [
+    {
+      "path": "/commands/Midnight_CronJobs",
+      "schedule": "30 18 * * *"
+    }
+  ]
+}

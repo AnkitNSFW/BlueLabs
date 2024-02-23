@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/widgetConfig.css' %}">
+  <title>{{ ticker.upper }}-{{currency}}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <form action="/notion/config/{{widget_name}}/{{widget_id}}" method="post">
+        {% csrf_token %}
+        <div class="outer-div">
+            <div class="inner-div" id="div1">
+                <label>Background Color:</label>
+            </div>
+            <div class="inner-div" id="div2">
+                <select name="bg_color" required>
+                    <option value="dark" selected>Dark</option>
+                    <option value="light">Light</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            
+            
+        </div>
+
+        <!-- <button type="submit">submit</button> -->
+        <div class="outer-div">
+            <div class="inner-div" id="div1"></div>
+            <div class="inner-div" id="div2">
+                <button class="bn1" type="submit">Submit</button>
+            </div>
+        </div>
+        
+      </form>
+    
+
+</body>
+
+</html>

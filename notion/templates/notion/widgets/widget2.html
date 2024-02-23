@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{name}}</title>
+    <link rel="icon" href="{{asset_urls.logo_png}}" type="image/png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+      <div style="background-color: {{background_color}};" class="flex h-screen text-center select-none">
+        <div class="m-auto">
+			
+          <div  class="relative rounded-t-full" style="background: conic-gradient(from 90deg at 50% 100%, red, red, red, yellow, green );  height: 55vh; width: 110vh;">
+            <div style="height:95%; width:95%; background-color: {{background_color}};" class="absolute bottom-0 left-1/2 mb-0 -translate-x-1/2 transform rounded-t-full text-center {{text_color}}">
+              <p id="value" style="font-size: 40vh" class=""></p>
+            </div>
+          </div>
+
+          <p id="value_classification" style="font-size: 20vh" class="mt-2"></p>
+        </div>
+      </div>
+
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<script>
+			const apiUrl = 'https://api.alternative.me/fng/?limit=1';
+
+			function api_failed(){
+				$("#value").html("NaN")
+				$("#value_classification").html("Error").toggleClass("text-red-400");
+			}
+
+			fetch(apiUrl)
+				.then(response => response.json())
+				.then(data => {
+					if (data && data.data && data.data.length > 0) {
+						const fearAndGreedData = data.data[0];
+						$("#value").html(fearAndGreedData.value)
+						$("#value_classification").html(fearAndGreedData.value_classification)
+
+							 if (fearAndGreedData.value < 25) {$("#value_classification").toggleClass("text-red-500");   }
+						else if (fearAndGreedData.value < 50) {$("#value_classification").toggleClass("text-yellow-500");}
+						else if (fearAndGreedData.value < 75) {$("#value_classification").toggleClass("text-green-400"); }
+						else 								  {$("#value_classification").toggleClass("text-green-700"); }
+					
+					} else {api_failed()}})
+					.catch(error => {api_failed()});
+		</script>
+  </body>
+</html>

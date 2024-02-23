@@ -1,0 +1,611 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/widgetConfig.css' %}">
+  <title>{{ ticker.upper }}-{{currency}}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <form action="/notion/config/{{widget_name}}/{{widget_id}}" method="post">
+        {% csrf_token %}
+        <div class="outer-div">
+            <div class="inner-div" id="div1">
+                <label for="firstDropdown">Select Coin:</label>
+            </div>
+            <div class="inner-div" id="div2">
+                <select id="firstDropdown" onchange="populateSecondDropdown()" name="ticker" required>
+                    <option value="{{ticker.upper}}" selected>{{ticker.upper}}(current)</option>
+                    <option value="" disabled>----</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="outer-div">
+            <div class="inner-div" id="div1">
+                <label for="secondDropdown">Select Pair:</label>
+            </div>
+            <div class="inner-div" id="div2">
+                <select id="secondDropdown" name="currency" required></select>
+            </div>
+        </div>
+
+        <div class="outer-div">
+            <div class="inner-div" id="div1">
+                <label>Refreshrate(s):</label>
+            </div>
+            <div class="inner-div" id="div2">
+                <select name="Refreshrate" required>
+                    <option value={{refreshRate}} selected>{{refreshRate}}(current)</option>
+                    <option value="" disabled>----</option>
+                    <option value=1 >1</option>
+                    <option value=2.5 >2.5</option>
+                    <option value=5 >5</option>
+                    <option value=10 >10</option>
+                    <option value=30 >30</option>
+                    <option value=60 >60</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="outer-div">
+            <div class="inner-div" id="div1">
+                <label>Background Color:</label>
+            </div>
+            <div class="inner-div" id="div2">
+                <select name="bg_color" required>
+                    <option value="dark" selected>Dark</option>
+                    <option value="light">Light</option>
+                </select>
+            </div>
+        </div>
+        <div>
+            
+            
+        </div>
+
+        <!-- <button type="submit">submit</button> -->
+        <div class="outer-div">
+            <div class="inner-div" id="div1"></div>
+            <div class="inner-div" id="div2">
+                <button class="bn1" type="submit">Submit</button>
+            </div>
+        </div>
+        
+      </form>
+    
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+  <script>
+    const coinPairs = {
+    '1INCH': ['BTC', 'USDT', 'BUSD'],
+    AAVE: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    ACA: ['BTC', 'USDT', 'BUSD'],
+    ACH: ['BTC', 'USDT', 'BUSD'],
+    ACM: ['BTC', 'USDT', 'BUSD'],
+    ADA: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    ADX: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    AE: ['BTC', 'BNB', 'ETH'],
+    AERGO: ['BTC', 'USDT', 'BUSD'],
+    AGI: ['BTC', 'BNB', 'ETH'],
+    AGIX: ['BTC', 'USDT', 'BUSD'],
+    AGLD: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    AION: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    AKRO: ['BTC', 'USDT', 'BUSD'],
+    ALCX: ['BTC', 'USDT', 'BUSD'],
+    ALGO: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    ALICE: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    ALPACA: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    ALPHA: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    ALPINE: ['BTC', 'USDT', 'BUSD'],
+    AMB: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    AMP: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    ANC: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    ANKR: ['BTC', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    ANT: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    ANY: ['BTC', 'USDT', 'BUSD'],
+    APE: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    API3: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    APPC: ['BTC', 'BNB', 'ETH'],
+    APT: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    AR: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    ARB: ['TUSD', 'BTC', 'USDT', 'ETH'],
+    ARDR: ['BTC', 'USDT', 'BNB', 'ETH'],
+    ARK: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    ARKM: ['TUSD', 'BTC', 'USDT', 'BNB'],
+    ARN: ['BTC', 'ETH'],
+    ARPA: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    ASR: ['BTC', 'USDT', 'BUSD'],
+    AST: ['BTC', 'USDT', 'ETH'],
+    ASTR: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    ATA: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    ATM: ['BTC', 'USDT', 'BUSD'],
+    ATOM: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    AUCTION: ['BTC', 'USDT', 'BUSD'],
+    AUD: ['USDT', 'BUSD'],
+    AUDIO: ['BTC', 'USDT', 'BUSD'],
+    AUTO: ['BTC', 'USDT', 'BUSD'],
+    AVA: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    AVAX: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    AXS: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    BADGER: ['BTC', 'USDT', 'BUSD'],
+    BAKE: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    BAL: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    BAND: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    BAR: ['BTC', 'USDT', 'BUSD'],
+    BAT: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    BCC: ['BTC', 'USDT', 'BNB', 'ETH'],
+    BCD: ['BTC', 'ETH'],
+    BCH: ['BTC', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    BCHA: ['BUSD'],
+    BCHABC: ['TUSD', 'BTC', 'USDT', 'BUSD'],
+    BCHSV: ['TUSD', 'BTC', 'USDT'],
+    BCN: ['BTC', 'BNB', 'ETH'],
+    BCPT: ['BTC', 'TUSD', 'BNB', 'ETH'],
+    BEAM: ['BTC', 'USDT', 'BNB'],
+    BEAMX: ['USDT'],
+    BEAR: ['USDT', 'BUSD'],
+    BEL: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    BETA: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    BETH: ['USDT', 'BUSD', 'ETH'],
+    BICO: ['BTC', 'USDT', 'BUSD'],
+    BIFI: ['USDT', 'BNB', 'BUSD'],
+    BKRW: ['USDT', 'BUSD'],
+    BLZ: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    BNB: ['BTC', 'ETH', 'USDT', 'TUSD', 'BUSD'],
+    BNT: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    BNX: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    BOND: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    BOT: ['BTC', 'BUSD'],
+    BQX: ['BTC', 'ETH'],
+    BRD: ['BTC', 'BNB', 'ETH'],
+    BSW: ['USDT', 'BNB', 'BUSD', 'ETH'],
+    BTC: ['TUSD', 'USDT', 'BUSD'],
+    BTCB: ['BTC'],
+    BTCST: ['BTC', 'USDT', 'BUSD'],
+    BTG: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    BTS: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    BTT: ['BTC', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    BTTC: ['USDT', 'BUSD'],
+    BURGER: ['USDT', 'BNB', 'BUSD', 'ETH'],
+    BUSD: ['USDT'],
+    BZRX: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    C98: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    CAKE: ['BTC', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    CDT: ['BTC', 'ETH'],
+    CELO: ['BTC', 'USDT', 'BUSD'],
+    CELR: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    CFX: ['TUSD', 'BTC', 'USDT', 'BUSD'],
+    CHAT: ['BTC', 'ETH'],
+    CHESS: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    CHR: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    CHZ: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    CITY: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    CKB: ['BTC', 'USDT', 'BUSD'],
+    CLOAK: ['BTC', 'ETH'],
+    CLV: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    CMT: ['BTC', 'BNB', 'ETH'],
+    CND: ['BTC', 'BNB', 'ETH'],
+    COCOS: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    COMBO: ['USDT', 'BNB'],
+    COMP: ['BTC', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    COS: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    COTI: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    COVER: ['BUSD', 'ETH'],
+    CREAM: ['USDT', 'BNB', 'BUSD'],
+    CRV: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    CTK: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    CTSI: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    CTXC: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    CVC: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    CVP: ['USDT', 'BUSD', 'ETH'],
+    CVX: ['BTC', 'USDT', 'BUSD'],
+    CYBER: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD'],
+    DAI: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    DAR: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    DASH: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    DATA: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    DCR: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    DEGO: ['BTC', 'USDT', 'BUSD'],
+    DENT: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    DEXE: ['USDT', 'BUSD', 'ETH'],
+    DF: ['USDT', 'BUSD', 'ETH'],
+    DGB: ['BTC', 'USDT', 'BUSD'],
+    DGD: ['BTC', 'ETH'],
+    DIA: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    DLT: ['BTC', 'BNB', 'ETH'],
+    DNT: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    DOCK: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    DODO: ['BTC', 'USDT', 'BUSD'],
+    DOGE: ['BTC', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    DOT: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    DREP: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    DUSK: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    DYDX: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    EASY: ['BTC', 'ETH'],
+    EDO: ['BTC', 'ETH'],
+    EDU: ['TUSD', 'BTC', 'USDT', 'BNB'],
+    EGLD: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    ELF: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    ENG: ['BTC', 'ETH'],
+    ENJ: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    ENS: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    EOS: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    EPS: ['BTC', 'USDT', 'BUSD'],
+    EPX: ['USDT', 'BUSD'],
+    ERD: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    ERN: ['USDT', 'BNB', 'BUSD'],
+    ETC: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    ETH: ['TUSD', 'BTC', 'USDT', 'BUSD'],
+    EUR: ['USDT', 'BUSD'],
+    EVX: ['BTC', 'ETH'],
+    EZ: ['BTC', 'ETH'],
+    FARM: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    FDUSD: ['USDT', 'BUSD'],
+    FET: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    FIDA: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    FIL: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    FIO: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    FIRO: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    FIS: ['BTC', 'USDT', 'BUSD'],
+    FLM: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    FLOKI: ['TUSD', 'USDT'],
+    FLOW: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    FLUX: ['BTC', 'USDT', 'BUSD'],
+    FOR: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    FORTH: ['BTC', 'USDT', 'BUSD'],
+    FRONT: ['BTC', 'ETH', 'USDT', 'TUSD', 'BUSD'],
+    FTM: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    FTT: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    FUEL: ['BTC', 'ETH'],
+    FUN: ['BTC', 'USDT', 'BNB', 'ETH'],
+    FXS: ['BTC', 'USDT', 'BUSD'],
+    GAL: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    GALA: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    GAS: ['BTC', 'USDT', 'BUSD'],
+    GBP: ['USDT', 'BUSD'],
+    GFT: ['USDT', 'BUSD'],
+    GHST: ['USDT', 'BUSD', 'ETH'],
+    GLM: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    GLMR: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    GMT: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    GMX: ['BTC', 'USDT', 'BUSD'],
+    GNO: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    GNS: ['BTC', 'USDT'],
+    GNT: ['BTC', 'BNB', 'ETH'],
+    GO: ['BTC', 'BNB'],
+    GRS: ['BTC', 'ETH'],
+    GRT: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    GTC: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    GTO: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    GVT: ['BTC', 'ETH'],
+    GXS: ['BTC', 'USDT', 'BNB', 'ETH'],
+    HARD: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    HBAR: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    HC: ['BTC', 'USDT', 'ETH'],
+    HEGIC: ['BUSD', 'ETH'],
+    HFT: ['BTC', 'USDT', 'BUSD'],
+    HIFI: ['USDT', 'ETH'],
+    HIGH: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    HIVE: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    HNT: ['BTC', 'USDT', 'BUSD'],
+    HOOK: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    HOT: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    HSR: ['BTC', 'ETH'],
+    ICN: ['BTC', 'ETH'],
+    ICP: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    ICX: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    ID: ['TUSD', 'BTC', 'USDT', 'BNB'],
+    IDEX: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    ILV: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    IMX: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    INJ: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    INS: ['BTC', 'ETH'],
+    IOST: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    IOTA: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    IOTX: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    IQ: ['USDT', 'BNB', 'BUSD'],
+    IRIS: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    JASMY: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    JOE: ['BTC', 'USDT', 'BUSD'],
+    JST: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    JUV: ['BTC', 'USDT', 'BUSD'],
+    KAVA: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    KDA: ['BTC', 'USDT', 'BUSD'],
+    KEEP: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    KEY: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    KLAY: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    KMD: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    KNC: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    KP3R: ['USDT', 'BNB', 'BUSD'],
+    KSM: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    LAZIO: ['BTC', 'USDT', 'BUSD'],
+    LDO: ['TUSD', 'BTC', 'USDT', 'BUSD'],
+    LEND: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    LEVER: ['USDT', 'BUSD'],
+    LINA: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    LINK: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    LIT: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    LOKA: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    LOOM: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    LPT: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    LQTY: ['BTC', 'USDT'],
+    LRC: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    LSK: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    LTC: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    LTO: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    LUN: ['BTC', 'ETH'],
+    LUNA: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    LUNC: ['USDT', 'BUSD'],
+    MAGIC: ['BTC', 'USDT', 'BUSD'],
+    MANA: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    MASK: ['USDT', 'BNB', 'BUSD'],
+    MATIC: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    MAV: ['TUSD', 'BTC', 'USDT'],
+    MBL: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    MBOX: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    MC: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    MCO: ['BTC', 'USDT', 'BNB', 'ETH'],
+    MDA: ['BTC', 'ETH'],
+    MDT: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    MDX: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    MEME: ['TUSD', 'USDT', 'BNB'],
+    MFT: ['BTC', 'USDT', 'BNB', 'ETH'],
+    MINA: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    MIR: ['BTC', 'USDT', 'BUSD'],
+    MITH: ['BTC', 'USDT', 'BNB'],
+    MKR: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    MLN: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    MOB: ['BTC', 'USDT', 'BUSD'],
+    MOD: ['BTC', 'ETH'],
+    MOVR: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    MTH: ['BTC', 'ETH'],
+    MTL: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    MULTI: ['BTC', 'USDT', 'BUSD'],
+    NANO: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    NAS: ['BTC', 'BNB', 'ETH'],
+    NAV: ['BTC', 'BNB', 'ETH'],
+    NBS: ['BTC', 'USDT'],
+    NBT: ['USDT'],
+    NCASH: ['BTC', 'BNB', 'ETH'],
+    NEAR: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    NEBL: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    NEO: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    NEXO: ['BTC', 'USDT', 'BUSD'],
+    NKN: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    NMR: ['BTC', 'USDT', 'BUSD'],
+    NPXS: ['BTC', 'USDT', 'ETH'],
+    NTRN: ['BTC', 'USDT', 'BNB'],
+    NU: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    NULS: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    NXS: ['BTC', 'BNB', 'ETH'],
+    OAX: ['BTC', 'USDT', 'ETH'],
+    OCEAN: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    OG: ['BTC', 'USDT', 'BUSD'],
+    OGN: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    OM: ['BTC', 'USDT', 'BUSD'],
+    OMG: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    ONE: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    ONG: ['BTC', 'USDT', 'BNB'],
+    ONT: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    OOKI: ['USDT', 'BNB', 'BUSD', 'ETH'],
+    OP: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    ORDI: ['TUSD', 'BTC', 'USDT'],
+    ORN: ['BTC', 'USDT', 'BUSD'],
+    OSMO: ['BTC', 'USDT', 'BUSD'],
+    OST: ['BTC', 'BNB', 'ETH'],
+    OXT: ['BTC', 'USDT', 'BUSD'],
+    PAX: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    PAXG: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    PENDLE: ['TUSD', 'BTC', 'USDT'],
+    PEOPLE: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    PEPE: ['TUSD', 'USDT'],
+    PERL: ['BTC', 'USDT', 'BNB'],
+    PERP: ['BTC', 'USDT', 'BUSD'],
+    PHA: ['BTC', 'USDT', 'BUSD'],
+    PHB: ['BTC', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    PHX: ['BTC', 'BNB', 'ETH'],
+    PIVX: ['BTC', 'USDT', 'BNB'],
+    PLA: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    PNT: ['BTC', 'USDT'],
+    POA: ['BTC', 'BNB', 'ETH'],
+    POE: ['BTC', 'ETH'],
+    POLS: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    POLY: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    POLYX: ['BTC', 'USDT', 'BUSD'],
+    POND: ['BTC', 'USDT', 'BUSD'],
+    PORTO: ['BTC', 'USDT', 'BUSD'],
+    POWR: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    PPT: ['BTC', 'ETH'],
+    PROM: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    PROS: ['USDT', 'BUSD', 'ETH'],
+    PSG: ['BTC', 'USDT', 'BUSD'],
+    PUNDIX: ['USDT', 'BUSD', 'ETH'],
+    PYR: ['BTC', 'USDT', 'BUSD'],
+    QI: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    QKC: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    QLC: ['BTC', 'BNB', 'ETH'],
+    QNT: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    QSP: ['BTC', 'BNB', 'ETH'],
+    QTUM: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    QUICK: ['BTC', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    RAD: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    RAMP: ['BTC', 'USDT', 'BUSD'],
+    RARE: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    RAY: ['USDT', 'BNB', 'BUSD'],
+    RCN: ['BTC', 'BNB', 'ETH'],
+    RDN: ['BTC', 'BNB', 'ETH'],
+    RDNT: ['TUSD', 'BTC', 'USDT'],
+    REEF: ['BTC', 'USDT', 'BUSD'],
+    REI: ['USDT', 'BNB', 'BUSD', 'ETH'],
+    REN: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    RENBTC: ['BTC', 'ETH'],
+    REP: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    REQ: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    RGT: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    RIF: ['BTC', 'USDT'],
+    RLC: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    RNDR: ['BTC', 'USDT', 'BUSD'],
+    ROSE: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    RPL: ['BTC', 'USDT', 'BUSD'],
+    RPX: ['BTC', 'BNB', 'ETH'],
+    RSR: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    RUNE: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    RVN: ['BTC', 'USDT', 'BUSD'],
+    SALT: ['BTC', 'ETH'],
+    SAND: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    SANTOS: ['BTC', 'USDT', 'BUSD'],
+    SC: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    SCRT: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    SEI: ['TUSD', 'BTC', 'USDT', 'BNB'],
+    SFP: ['BTC', 'USDT', 'BUSD'],
+    SHIB: ['TUSD', 'USDT', 'BUSD'],
+    SKL: ['BTC', 'USDT', 'BUSD'],
+    SKY: ['BTC', 'BNB', 'ETH'],
+    SLP: ['USDT', 'BNB', 'BUSD', 'ETH'],
+    SNGLS: ['BTC', 'ETH'],
+    SNM: ['BTC', 'BUSD', 'ETH'],
+    SNT: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    SNX: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    SOL: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    SPARTA: ['BNB'],
+    SPELL: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    SRM: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    SSV: ['BTC', 'ETH', 'USDT', 'TUSD', 'BUSD'],
+    STEEM: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    STG: ['BTC', 'USDT', 'BUSD'],
+    STMX: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    STORJ: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    STORM: ['BTC', 'USDT', 'BNB', 'ETH'],
+    STPT: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    STRAT: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    STRAX: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    STX: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    SUB: ['BTC', 'ETH'],
+    SUI: ['TUSD', 'BTC', 'USDT', 'BNB'],
+    SUN: ['BTC', 'USDT', 'BUSD'],
+    SUPER: ['BTC', 'USDT', 'BUSD'],
+    SUSD: ['BTC', 'USDT', 'ETH'],
+    SUSHI: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    SWRV: ['BNB', 'BUSD'],
+    SXP: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    SYN: ['BTC', 'USDT'],
+    SYS: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    T: ['USDT', 'BUSD'],
+    TCT: ['BTC', 'USDT', 'BNB'],
+    TFUEL: ['BTC', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    THETA: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    TIA: ['TUSD', 'BTC', 'USDT'],
+    TKO: ['BTC', 'USDT', 'BUSD'],
+    TLM: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    TNB: ['BTC', 'ETH'],
+    TNT: ['BTC', 'ETH'],
+    TOMO: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    TORN: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    TRB: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    TRIBE: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    TRIG: ['BTC', 'BNB', 'ETH'],
+    TROY: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    TRU: ['BTC', 'USDT', 'BUSD'],
+    TRX: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    TUSD: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    TUSDB: ['TUSD'],
+    TVK: ['BTC', 'USDT', 'BUSD'],
+    TWT: ['BTC', 'USDT', 'BUSD'],
+    UFT: ['USDT', 'BUSD', 'ETH'],
+    UMA: ['BTC', 'USDT', 'BUSD'],
+    UNFI: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    UNI: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    USDC: ['TUSD', 'USDT', 'BNB', 'BUSD'],
+    USDP: ['USDT', 'BUSD'],
+    USDS: ['TUSD', 'USDT'],
+    USDSB: ['USDT'],
+    UST: ['BTC', 'USDT', 'BUSD'],
+    USTC: ['USDT', 'BUSD'],
+    UTK: ['BTC', 'USDT', 'BUSD'],
+    VEN: ['BTC', 'USDT', 'BNB', 'ETH'],
+    VET: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    VGX: ['BTC', 'USDT', 'ETH'],
+    VIA: ['BTC', 'BNB', 'ETH'],
+    VIB: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    VIBE: ['BTC', 'ETH'],
+    VIDT: ['BTC', 'USDT', 'BUSD'],
+    VITE: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    VOXEL: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    VTHO: ['USDT', 'BNB', 'BUSD'],
+    WABI: ['BTC', 'BNB', 'ETH'],
+    WAN: ['BTC', 'USDT', 'BNB', 'ETH'],
+    WAVES: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    WAXP: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    WBETH: ['USDT', 'ETH'],
+    WBTC: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    WIN: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    WING: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    WINGS: ['BTC', 'ETH'],
+    WLD: ['BTC', 'USDT'],
+    WNXM: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    WOO: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    WPR: ['BTC', 'ETH'],
+    WRX: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    WTC: ['BTC', 'USDT', 'BNB', 'ETH'],
+    XEC: ['USDT', 'BUSD'],
+    XEM: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    XLM: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    XMR: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    XNO: ['BTC', 'USDT', 'BUSD', 'ETH'],
+    XRP: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    XTZ: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    XVG: ['BTC', 'ETH', 'USDT', 'TUSD', 'BUSD'],
+    XVS: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    XZC: ['BTC', 'USDT', 'BNB', 'ETH'],
+    YFI: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    YFII: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    YGG: ['BTC', 'USDT', 'BNB', 'BUSD'],
+    YOYO: ['BTC', 'BNB', 'ETH'],
+    ZEC: ['BTC', 'ETH', 'USDT', 'BNB', 'TUSD', 'BUSD'],
+    ZEN: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    ZIL: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD'],
+    ZRX: ['BTC', 'ETH', 'USDT', 'BNB', 'BUSD']
+};
+
+    function populateFirstDropdown() {
+        const firstDropdown = document.getElementById('firstDropdown');
+
+        // Populate options for the first dropdown
+        Object.keys(coinPairs).forEach(coin => {
+            const option = document.createElement('option');
+            option.value = coin;
+            option.text = coin;
+            firstDropdown.add(option);
+        });
+    }
+
+    function populateSecondDropdown() {
+        const firstDropdown = document.getElementById('firstDropdown');
+        const secondDropdown = document.getElementById('secondDropdown');
+        const selectedCoin = firstDropdown.value;
+
+        // Clear previous options
+        secondDropdown.innerHTML = '<option value="{{currency.upper}}" selected>{{currency.upper}}(current)</option> <option value="" disabled>----</option>';
+
+        // Populate options based on the selected coin
+        coinPairs[selectedCoin].forEach(pair => {
+            const option = document.createElement('option');
+            option.value = pair;
+            option.text = pair;
+            secondDropdown.add(option);
+        });
+    }
+
+    // Initial population
+    populateFirstDropdown();
+    populateSecondDropdown();
+  </script>
+</body>
+
+</html>
