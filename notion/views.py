@@ -99,7 +99,7 @@ def widgetFunctons(request, widget_id):
     else:
         return JsonResponse({'status': False})
 
-
+@csrf_exempt
 @xframe_options_exempt
 def widget(request, widget_id=None):
     if widget_id:
