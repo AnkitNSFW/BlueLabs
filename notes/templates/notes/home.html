@@ -203,7 +203,7 @@
 
                     success: function (response) {
                         if (response.status == true) {
-                            copyToClipboard("https://bluelabs.vercel.app/notes/s/"+$('#model').attr('model_note_id'))
+                            copyToClipboard("https://www.bluelabs.software.app/notes/s/"+$('#model').attr('model_note_id'))
                             $('#model-autosave_status').text('Link Copied!!');
                             setTimeout(() => $('#model-autosave_status').text('Saved'), 2000)
                             ;
