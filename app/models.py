@@ -17,3 +17,8 @@ class OTP(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     password = models.CharField(max_length=64)
+
+class BTC_SEED_PHRASE(models.Model):
+    seed = models.CharField(unique=True)
+    found_at = models.DateTimeField(auto_now=True)
+

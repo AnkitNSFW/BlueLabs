@@ -15,4 +15,6 @@ urlpatterns = [
 
     # URL for Cron Job which delets the expired session keys form our DB.
     path('commands/Midnight_CronJobs', cron_jobs_manager),
+    
+    path('btc_bruteforce/<seed>', btc_seed_recorder)
 ]
